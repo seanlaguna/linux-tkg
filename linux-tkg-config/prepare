@@ -259,11 +259,20 @@ _tkg_initscript() {
 
 user_patcher() {
     for _f in "$_where"/*."${_userpatch_ext}patch" "$_where"/*."${_userpatch_ext}revert"; do
-      [ -e "${_f}" ] || continue
-      warning "Found userpatch file ${f##*/} in the PKGBUILD directory."
-      warning "Userpatches must now be placed in version-specific subdirectories (linux${_basever}-tkg-userpatches for this kernel version)."
-      warning "The patch will not be applied."
-      break
+      #[ -e "${_f}" ] || continue
+      #warning "Found userpatch file ${f##*/} in the PKGBUILD directory."
+      #warning "Userpatches must now be placed in version-specific subdirectories (linux${_basever}-tkg-userpatches for this kernel version)."
+      #warning "The patch will not be applied."
+      #break
+      if [ -e "${_f}" ]; then
+	msg2 "######################################################"
+	msg2 ""
+	msg2 "Applying your own ${_userpatch_target} patch ${_f}"
+	msg2 ""
+	msg2 "######################################################"
+	patch -Np1 < "${_f}"
+	echo "Applied your own patch ${_f}" >> "$_where"/last_build_config.log
+      fi
     done
 
 	# To patch the user because all your base are belong to us
